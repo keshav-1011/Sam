@@ -24,20 +24,15 @@ body{
   background:none;
   border:none;
   cursor:pointer;
-  margin-bottom:12px;
+  margin-bottom:8px;
 }
-.playing{
-  animation:pulse 1.2s infinite;
-}
+.playing{animation:pulse 1.2s infinite;}
 @keyframes pulse{
   0%{transform:scale(1);}
   50%{transform:scale(1.2);}
   100%{transform:scale(1);}
 }
-#volume{
-  width:120px;
-  margin-bottom:10px;
-}
+#volume{width:120px;margin-bottom:12px}
 
 /* CARD */
 .card{
@@ -46,30 +41,41 @@ body{
   padding:25px;
   width:90%;
   max-width:420px;
+  height:520px;                 /* 🔒 FIXED CARD HEIGHT */
   box-shadow:0 15px 40px rgba(0,0,0,.2);
   text-align:center;
   z-index:2;
+  overflow:hidden;
 }
-h1{color:#ff4d6d}
+h1{color:#ff4d6d;margin:6px 0}
 p{color:#444;font-size:15px}
 button{
-  margin:8px;
-  padding:12px 20px;
+  margin:6px;
+  padding:10px 18px;
   border:none;
   border-radius:25px;
   background:#ff4d6d;
   color:white;
-  font-size:15px;
+  font-size:14px;
   cursor:pointer;
 }
 button:hover{transform:scale(1.05)}
-.emoji{font-size:36px;margin-bottom:10px}
+.emoji{font-size:34px;margin-bottom:6px}
 
-/* SLIDESHOW */
-img{
+/* FIXED IMAGE BOX */
+.image-box{
   width:100%;
+  height:220px;                 /* 🔒 FIXED IMAGE AREA */
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:10px 0;
+}
+.image-box img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;           /* ✅ SHRINK, DON'T CROP */
   border-radius:15px;
-  margin-top:10px;
 }
 
 /* HEARTS */
@@ -102,17 +108,17 @@ img{
 /* GAME */
 .tic{
   display:grid;
-  grid-template-columns:repeat(3,80px);
+  grid-template-columns:repeat(3,70px);
   gap:8px;
   justify-content:center;
-  margin:15px 0;
+  margin:10px 0;
 }
 .cell{
-  width:80px;
-  height:80px;
+  width:70px;
+  height:70px;
   background:#ffe3ea;
   border-radius:15px;
-  font-size:36px;
+  font-size:34px;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -130,7 +136,6 @@ canvas{
 
 <body>
 
-<!-- MUSIC -->
 <audio id="bgMusic" loop>
   <source src="love_song.mp3" type="audio/mpeg">
 </audio>
@@ -188,21 +193,32 @@ function no1(){c.innerHTML=`<div class="emoji">😤</div><h1>Wrong answer</h1><p
 function wrong(){c.innerHTML=`<div class="emoji">🤦‍♂️</div><h1>Nope</h1><p>Try again 😤</p><button onclick="yes1()">Retry</button>`;}
 function kiss(){c.innerHTML=`<div class="emoji">💋</div><h1>Correct ❤️</h1><p>Do you see a future with me?</p><button onclick="wrong()">No 🤔</button><button onclick="photos()">Yes 💍</button>`;}
 
-/* SLIDES */
+/* SLIDESHOW */
 function photos(){
-  c.innerHTML=`<div class="emoji">📸</div><h1>Our Memories</h1><img id="img" src="photo1.jpeg"><button onclick="ticTacToe()">Play 🎮</button>`;
+  c.innerHTML=`
+    <div class="emoji">📸</div>
+    <h1>Our Memories ❤️</h1>
+    <div class="image-box">
+      <img id="slideImg" src="photo1.jpeg">
+    </div>
+    <p>Every moment with you 🤍</p>
+    <button onclick="ticTacToe()">Play a game 🎮</button>
+  `;
   let i=1;
-  setInterval(()=>{i=i%13+1;document.getElementById("img").src="photo"+i+".jpeg";},8000);
+  setInterval(()=>{
+    i=i%13+1;
+    document.getElementById("slideImg").src="photo"+i+".jpeg";
+  },8000);
 }
 
-/* COUNTDOWN */
+/* MINI COUNTDOWN */
 function startMini(){
-  document.getElementById("miniCountdown").style.display="block";
+  const box=document.getElementById("miniCountdown");
+  box.style.display="block";
   setInterval(()=>{
     let d=new Date("Jan 1, 2026").getTime()-Date.now();
-    if(d<=0)return;
-    let days=Math.floor(d/86400000);
-    document.getElementById("miniCountdown").innerHTML=`🎆 ${days} days to 2026`;
+    if(d<=0){box.innerHTML="🎆 Happy 2026 ❤️";return;}
+    box.innerHTML=`🎆 ${Math.floor(d/86400000)} days to 2026`;
   },1000);
 }
 
@@ -211,7 +227,9 @@ let board,turn;
 function ticTacToe(){
   startMini();
   board=["","","","","","","","",""]; turn="❌";
-  c.innerHTML=`<div class="emoji">🎮</div><h1>Tic Tac Toe</h1><div class="tic">${board.map((_,i)=>`<div class="cell" onclick="play(${i})"></div>`).join("")}</div><button onclick="forever()">Continue ❤️</button>`;
+  c.innerHTML=`<div class="emoji">🎮</div><h1>Tic Tac Toe</h1>
+    <div class="tic">${board.map((_,i)=>`<div class="cell" onclick="play(${i})"></div>`).join("")}</div>
+    <button onclick="forever()">Continue ❤️</button>`;
 }
 function play(i){
   if(board[i])return;
@@ -254,4 +272,3 @@ function fireworks(){
 
 </body>
 </html>
-
